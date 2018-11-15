@@ -266,7 +266,7 @@ def create_import_resolver(resolver_configuration):
             else:
                 # default import resolver
                 return DefaultImportResolver(**parameters)
-        except Exception, ex:
+        except Exception as ex:
             raise ResolverInstantiationError(
                 'Failed to instantiate resolver ({0}). {1}'
                 .format(resolver_class_path or 'DefaultImportResolver',
