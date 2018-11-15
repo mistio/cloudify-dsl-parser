@@ -60,14 +60,14 @@ def build_node_graph(nodes, scaling_groups):
                        node=node,
                        scale_properties=scale_properties)
 
-    for group_name, group in scaling_groups.items():
+    for group_name, group in list(scaling_groups.items()):
         scale_properties = group['properties']
         groups_graph.add_node(group_name)
         graph.add_node(group_name,
                        node={'id': group_name, 'group': True},
                        scale_properties=scale_properties)
 
-    for group_name, group in scaling_groups.items():
+    for group_name, group in list(scaling_groups.items()):
         for member in group['members']:
             graph.add_edge(member, group_name,
                            relationship={
@@ -290,7 +290,7 @@ def extract_node_instances(node_instances_graph,
             if not group_rel:
                 indexed_relationship_instances.append(
                     (relationship_index, relationship_instance))
-        indexed_relationship_instances.sort(key=lambda (index, _): index)
+        indexed_relationship_instances.sort(key=lambda index__: index__[0])
         relationship_instances = [r for _, r in indexed_relationship_instances]
         node_instance[RELATIONSHIPS] = relationship_instances
         node_instances.append(node_instance)
@@ -713,7 +713,7 @@ def _partition_source_and_target_instances(
         group=group)
     assert (set(source_scaling_groups_map.keys()) ==
             set(target_scaling_groups_map.keys()))
-    for key, value in source_scaling_groups_map.items():
+    for key, value in list(source_scaling_groups_map.items()):
         partitioned_node_instance_ids.append((value,
                                               target_scaling_groups_map[key]))
     return partitioned_node_instance_ids
@@ -743,7 +743,7 @@ def _node_instance_id(node_id, ctx):
 
 
 def _generate_id(id_len=6):
-    return ''.join(choice(digits + ascii_lowercase) for _ in xrange(id_len))
+    return ''.join(choice(digits + ascii_lowercase) for _ in range(id_len))
 
 
 def _node_instance_copy(node, node_instance_id):
@@ -858,7 +858,7 @@ class Context(object):
             succ = graph.succ[node_id]
             if succ:
                 assert len(succ) == 1
-                node_id = succ.keys()[0]
+                node_id = list(succ.keys())[0]
                 if not graph.node[node_id]['node'].get('group'):
                     continue
                 result.append(node_id)
@@ -872,7 +872,7 @@ class Context(object):
             succ = graph.succ[node_instance_id]
             if succ:
                 assert len(succ) == 1
-                node_instance_id = succ.keys()[0]
+                node_instance_id = list(succ.keys())[0]
                 node = graph.node[node_instance_id]['node']
                 if not node.get('group'):
                     continue
@@ -889,7 +889,7 @@ class Context(object):
             succ = contained_graph.succ[instance_id]
             if succ:
                 assert len(succ) == 1
-                node_instance_id = succ.keys()[0]
+                node_instance_id = list(succ.keys())[0]
                 node = contained_graph.node[node_instance_id]['node']
                 instance_id = node['id']
                 result.append({

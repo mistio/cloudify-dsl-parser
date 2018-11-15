@@ -930,7 +930,7 @@ description:
             yaml, 1, DSLParsingFormatException)
 
     def test_unicode_in_blueprint(self):
-        yaml = self.MINIMAL_BLUEPRINT + u"""
+        yaml = self.MINIMAL_BLUEPRINT + """
 node_types:
     test_type:
         properties:

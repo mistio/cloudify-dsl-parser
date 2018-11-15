@@ -16,7 +16,7 @@
 import copy
 import contextlib
 import importlib
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import sys
 
 import yaml.parser
@@ -41,7 +41,7 @@ def merge_schemas(overridden_schema,
                   overriding_schema,
                   data_types):
     merged = overriding_schema.copy()
-    for key, overridden_property in overridden_schema.items():
+    for key, overridden_property in list(overridden_schema.items()):
         if key not in overriding_schema:
             merged[key] = overridden_property
         else:
@@ -75,7 +75,7 @@ def merge_schemas(overridden_schema,
 
 def flatten_schema(schema):
     flattened_schema_props = {}
-    for prop_key, prop in schema.iteritems():
+    for prop_key, prop in list(schema.items()):
         if 'default' in prop:
             flattened_schema_props[prop_key] = prop['default']
     return flattened_schema_props
@@ -127,7 +127,7 @@ def _merge_flattened_schema_and_instance_properties(
     # validate instance properties don't
     # contain properties that are not defined
     # in the schema.
-    for key in instance_properties.iterkeys():
+    for key in list(instance_properties.keys()):
         if key not in schema_properties:
             ex = DSLParsingLogicException(
                 106,
@@ -137,10 +137,10 @@ def _merge_flattened_schema_and_instance_properties(
             ex.property = key
             raise ex
 
-    merged_properties = dict(flattened_schema_properties.items() +
-                             instance_properties.items())
+    merged_properties = dict(list(flattened_schema_properties.items()) +
+                             list(instance_properties.items()))
     result = {}
-    for key, property_schema in schema_properties.iteritems():
+    for key, property_schema in list(schema_properties.items()):
         if key not in merged_properties:
             required = property_schema.get('required', True)
             if required and raise_on_missing_property:
@@ -184,11 +184,11 @@ def parse_value(
         # intrinsic function - not validated at the moment
         return value
     if type_name == 'integer':
-        if isinstance(value, (int, long)) and not isinstance(
+        if isinstance(value, int) and not isinstance(
                 value, bool):
             return value
     elif type_name == 'float':
-        if isinstance(value, (int, float, long)) and not isinstance(
+        if isinstance(value, (int, float)) and not isinstance(
                 value, bool):
             return value
     elif type_name == 'boolean':
@@ -240,11 +240,11 @@ def load_yaml(raw_yaml, error_message, filename=None):
 
 
 def url_exists(url):
-    request = urllib2.Request(url)
+    request = urllib.request.Request(url)
     try:
-        with contextlib.closing(urllib2.urlopen(request)):
+        with contextlib.closing(urllib.request.urlopen(request)):
             return True
-    except urllib2.URLError:
+    except urllib.error.URLError:
         return False
 
 
@@ -285,7 +285,7 @@ def get_class_instance(class_path, properties):
     except Exception as e:
         exc_type, exc, traceback = sys.exc_info()
         raise RuntimeError('Failed to instantiate {0}, error: {1}'
-                           .format(class_path, e)), None, traceback
+                           .format(class_path, e)).with_traceback(traceback)
 
     return instance
 
@@ -295,7 +295,7 @@ def get_class(class_path):
     if not class_path:
         raise ValueError('class path is missing or empty')
 
-    if not isinstance(class_path, basestring):
+    if not isinstance(class_path, str):
         raise ValueError('class path is not a string')
 
     class_path = class_path.strip()

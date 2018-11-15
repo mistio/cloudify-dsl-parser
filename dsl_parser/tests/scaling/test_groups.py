@@ -2725,7 +2725,7 @@ class TestMultiInstanceGroups(scaling.BaseTestMultiInstance):
         # for node verify that its number of instances is as expected.
         expected_instances = expected_instances or {}
         expected_total = 0
-        for node_id, expected_count in expected_instances.items():
+        for node_id, expected_count in list(expected_instances.items()):
             expected_total += expected_count
             instances = self._nodes_by_name(
                 nodes=node_instances,
@@ -2866,7 +2866,7 @@ class TestMultiInstanceGroups(scaling.BaseTestMultiInstance):
         if assert_scaling_groups_count:
             self.assertEqual(len(scaling_groups), len(expected_groups))
 
-        for group_name, expected_group in expected_groups.items():
+        for group_name, expected_group in list(expected_groups.items()):
 
             # The following builds weakly connected components that include
             # all node instances that are contained in each group instance
@@ -2927,7 +2927,7 @@ class TestMultiInstanceGroups(scaling.BaseTestMultiInstance):
             # for each group instance:
             for component in components:
                 expected_total_count = 0
-                for member, count in expected_group['members'].items():
+                for member, count in list(expected_group['members'].items()):
                     expected_total_count += count
                     component_members = [
                         n for n in component if
@@ -3014,7 +3014,7 @@ class TestMultiInstanceGroups(scaling.BaseTestMultiInstance):
             expected_relationships,
             group_components):
         expected_relationships = expected_relationships or {}
-        for node_id, relationships in expected_relationships.items():
+        for node_id, relationships in list(expected_relationships.items()):
 
             # normalize expected_relationships to be a list
             if not isinstance(relationships, list):
@@ -3102,7 +3102,7 @@ class TestMultiInstanceGroups(scaling.BaseTestMultiInstance):
         plan based in the provided groups and nodes"""
 
         node_templates = {}
-        for node_id, node in nodes.items():
+        for node_id, node in list(nodes.items()):
             node_template = {
                 'type': 'cloudify.nodes.{0}'.format(node['type'])
             }
@@ -3134,7 +3134,7 @@ class TestMultiInstanceGroups(scaling.BaseTestMultiInstance):
 
         blueprint_groups = {}
         policies = {}
-        for group_name, group in groups.items():
+        for group_name, group in list(groups.items()):
             blueprint_groups[group_name] = {
                 'members': group['members']
             }

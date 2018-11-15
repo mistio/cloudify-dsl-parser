@@ -51,7 +51,7 @@ def scan_properties(value,
     :param path: The properties base path (for debugging purposes).
     """
     if isinstance(value, dict):
-        for k, v in value.iteritems():
+        for k, v in list(value.items()):
             current_path = '{0}.{1}'.format(path, k)
             result = handler(v, scope, context, current_path)
             _collect_secret(result)
@@ -90,7 +90,7 @@ def _scan_operations(operations,
                      context=None,
                      path='',
                      replace=False):
-    for name, definition in operations.iteritems():
+    for name, definition in list(operations.items()):
         if isinstance(definition, dict) and 'inputs' in definition:
             context = context.copy() if context else {}
             context['operation'] = definition
@@ -139,7 +139,7 @@ def scan_service_template(plan, handler, replace=False, search_secrets=False):
                         path='{0}.properties'.format(
                             node_template['name']),
                         replace=replace)
-        for name, capability in node_template.get('capabilities', {}).items():
+        for name, capability in list(node_template.get('capabilities', {}).items()):
             scan_properties(capability.get('properties', {}),
                             handler,
                             scope=NODE_TEMPLATE_SCOPE,
@@ -149,21 +149,21 @@ def scan_service_template(plan, handler, replace=False, search_secrets=False):
                                 name),
                             replace=replace)
         scan_node_operation_properties(node_template, handler, replace=replace)
-    for output_name, output in plan.outputs.iteritems():
+    for output_name, output in list(plan.outputs.items()):
         scan_properties(output,
                         handler,
                         scope=OUTPUTS_SCOPE,
                         context=plan.outputs,
                         path='outputs.{0}'.format(output_name),
                         replace=replace)
-    for policy_name, policy in plan.get('policies', {}).items():
+    for policy_name, policy in list(plan.get('policies', {}).items()):
         scan_properties(policy.get('properties', {}),
                         handler,
                         scope=POLICIES_SCOPE,
                         context=policy,
                         path='policies.{0}.properties'.format(policy_name),
                         replace=replace)
-    for group_name, scaling_group in plan.get('scaling_groups', {}).items():
+    for group_name, scaling_group in list(plan.get('scaling_groups', {}).items()):
         scan_properties(scaling_group.get('properties', {}),
                         handler,
                         scope=SCALING_GROUPS_SCOPE,

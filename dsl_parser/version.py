@@ -30,7 +30,7 @@ def parse_dsl_version(dsl_version):
         raise DSLParsingLogicException(71, '{0} is missing or empty'
                                        .format(VERSION))
 
-    if not isinstance(dsl_version, basestring):
+    if not isinstance(dsl_version, str):
         raise DSLParsingLogicException(72, 'Invalid {0}: {1} is not a string'
                                        .format(VERSION, dsl_version))
 

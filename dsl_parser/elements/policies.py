@@ -35,7 +35,7 @@ from dsl_parser.framework.elements import (DictElement,
 class PolicyTriggerSource(Element):
 
     required = True
-    schema = Leaf(type=basestring)
+    schema = Leaf(type=str)
 
 
 class PolicyTrigger(DictElement):
@@ -49,7 +49,7 @@ class PolicyTrigger(DictElement):
 class PolicyTypeSource(Element):
 
     required = True
-    schema = Leaf(type=basestring)
+    schema = Leaf(type=str)
 
 
 class PolicyType(DictElement):
@@ -73,7 +73,7 @@ class PolicyTriggers(DictElement):
 class GroupPolicyType(Element):
 
     required = True
-    schema = Leaf(type=basestring)
+    schema = Leaf(type=str)
     requires = {
         PolicyTypes: [Value('policy_types')]
     }
@@ -118,7 +118,7 @@ class GroupPolicyProperties(Element):
 class GroupPolicyTriggerType(Element):
 
     required = True
-    schema = Leaf(type=basestring)
+    schema = Leaf(type=str)
     requires = {
         PolicyTriggers: [Value('policy_triggers')]
     }
@@ -188,7 +188,7 @@ class GroupPolicy(DictElement):
 
 class GroupMember(Element):
 
-    schema = Leaf(type=basestring)
+    schema = Leaf(type=str)
     requires = {
         _node_templates.NodeTemplates: ['node_template_names']
     }
@@ -252,7 +252,7 @@ class Groups(DictElement):
 class PolicyInstanceType(Element):
 
     required = True
-    schema = Leaf(type=basestring)
+    schema = Leaf(type=str)
 
     def validate(self):
         scaling_policy = constants.SCALING_POLICY
@@ -266,7 +266,7 @@ class PolicyInstanceType(Element):
 
 class PolicyInstanceTarget(Element):
 
-    schema = Leaf(type=basestring)
+    schema = Leaf(type=str)
     requires = {
         Groups: [Value('groups')]
     }
@@ -337,7 +337,7 @@ class Policies(DictElement):
 
     def _create_scaling_groups(self, groups):
         policies = self.value
-        scaling_policies = [policy for policy in policies.values()
+        scaling_policies = [policy for policy in list(policies.values())
                             if policy['type'] == constants.SCALING_POLICY]
         scaling_groups = {}
         for policy in scaling_policies:
@@ -353,7 +353,7 @@ class Policies(DictElement):
     def _validate_and_update_groups(self, scaling_groups, node_templates):
 
         member_graph = nx.DiGraph()
-        for group_name, group in scaling_groups.items():
+        for group_name, group in list(scaling_groups.items()):
             for member in group['members']:
                 member_graph.add_edge(member, group_name)
 
@@ -410,7 +410,7 @@ class Policies(DictElement):
         # next, remove members that are groups themselves
         group_names = set(group_members.keys())
         group_node_members = {}
-        for group_name, members in group_members.items():
+        for group_name, members in list(group_members.items()):
             group_node_members[group_name] = members - group_names
 
         # now, for each group, for each node pair, verify both nodes in pair
@@ -445,7 +445,7 @@ class Policies(DictElement):
         checked_pairs = set()
         ok_pairs = set()
         problematic_pairs = set()
-        for node_members in group_node_members.values():
+        for node_members in list(group_node_members.values()):
             for node_a, node_b in itertools.product(node_members, repeat=2):
                 pair_key = tuple(sorted([node_a, node_b]))
                 if pair_key in checked_pairs:

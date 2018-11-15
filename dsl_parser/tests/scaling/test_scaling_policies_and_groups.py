@@ -350,7 +350,7 @@ class TestRemovedContainedInMember(AbstractTestParser):
     def assert_removal(self, groups, nodes, expected):
         blueprint = base_blueprint(groups=groups, nodes=nodes)
         plan = self.parse(blueprint)
-        for group, expected_members in expected.items():
+        for group, expected_members in list(expected.items()):
             self.assertEqual(set(expected_members),
                              set(plan['scaling_groups'][group]['members']))
 
@@ -749,7 +749,7 @@ class TestNodeTemplateDefaultScalableProperties(AbstractTestParser):
 
     def assert_scalable_properties(self, blueprint, expected_default=1):
         plan = self.parse_1_3(blueprint)
-        self.assertEquals({
+        self.assertEqual({
             'default_instances': expected_default,
             'min_instances': 0,
             'max_instances': constants.UNBOUNDED,
@@ -790,7 +790,7 @@ def base_blueprint(groups=None,
     groups = groups or {}
     nodes = nodes or {'node': None}
     node_templates = {}
-    for node, contained_in in nodes.items():
+    for node, contained_in in list(nodes.items()):
         node_template = {'type': 'type'}
         if contained_in:
             node_template['relationships'] = [
@@ -799,7 +799,7 @@ def base_blueprint(groups=None,
             ]
         node_templates[node] = node_template
     blueprint_groups = {}
-    for group, item in groups.items():
+    for group, item in list(groups.items()):
         if isinstance(item, dict):
             group_obj = item
         else:
@@ -807,7 +807,7 @@ def base_blueprint(groups=None,
         blueprint_groups[group] = group_obj
     if policies is None:
         policies = {'policy': {'type': constants.SCALING_POLICY,
-                               'targets': groups.keys()}}
+                               'targets': list(groups.keys())}}
     blueprint = {
         'tosca_definitions_version': version,
         'node_types': {'type': {}},

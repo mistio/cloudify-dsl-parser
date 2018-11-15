@@ -14,7 +14,7 @@
 #    * limitations under the License.
 
 import os
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 import networkx as nx
 
@@ -142,7 +142,7 @@ def _get_resource_location(resource_name,
 
     if os.path.exists(resource_name):
         return 'file:{0}'.format(
-            urllib.pathname2url(os.path.abspath(resource_name)))
+            urllib.request.pathname2url(os.path.abspath(resource_name)))
 
     if current_resource_context:
         candidate_url = current_resource_context[
@@ -153,7 +153,7 @@ def _get_resource_location(resource_name,
     if resources_base_path:
         full_path = os.path.join(resources_base_path, resource_name)
         return 'file:{0}'.format(
-            urllib.pathname2url(os.path.abspath(full_path)))
+            urllib.request.pathname2url(os.path.abspath(full_path)))
 
     return None
 
@@ -250,8 +250,8 @@ def _merge_parsed_into_combined(combined_parsed_dsl_holder,
     merge_no_override = MERGE_NO_OVERRIDE.copy()
     if version['definitions_version'] > (1, 2):
         merge_no_override.update(MERGEABLE_FROM_DSL_VERSION_1_3)
-    for key_holder, value_holder in parsed_imported_dsl_holder.value.\
-            iteritems():
+    for key_holder, value_holder in list(parsed_imported_dsl_holder.value.\
+            items()):
         if key_holder.value in IGNORE:
             pass
         elif key_holder.value not in combined_parsed_dsl_holder:
@@ -275,7 +275,7 @@ def _merge_parsed_into_combined(combined_parsed_dsl_holder,
 
 def _merge_into_dict_or_throw_on_duplicate(from_dict_holder, to_dict_holder,
                                            key_name):
-    for key_holder, value_holder in from_dict_holder.value.iteritems():
+    for key_holder, value_holder in list(from_dict_holder.value.items()):
         if key_holder.value not in to_dict_holder:
             to_dict_holder.value[key_holder] = value_holder
         else:

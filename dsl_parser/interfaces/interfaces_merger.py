@@ -32,7 +32,7 @@ class InterfaceMerger(object):
         merged_interface = {}
 
         for overridden_operation_name, overridden_operation \
-                in self.overridden_interface.items():
+                in list(self.overridden_interface.items()):
 
             overriding_operation = self.overriding_interface.get(
                 overridden_operation_name,
@@ -46,7 +46,7 @@ class InterfaceMerger(object):
             merged_interface[overridden_operation_name] = merged_operation
 
         for overriding_operation_name, overriding_operation \
-                in self.overriding_interface.items():
+                in list(self.overriding_interface.items()):
 
             overridden_operation = self.overridden_interface.get(
                 overriding_operation_name,
@@ -79,7 +79,7 @@ class InterfacesMerger(object):
         merged_interfaces = {}
 
         for overridden_interface_name, overridden_interface \
-                in self.overridden_interfaces.items():
+                in list(self.overridden_interfaces.items()):
 
             overriding_interface = self.overriding_interfaces.get(
                 overridden_interface_name, {})
@@ -93,7 +93,7 @@ class InterfacesMerger(object):
             merged_interfaces[overridden_interface_name] = merged_interface
 
         for overriding_interface_name, overriding_interface \
-                in self.overriding_interfaces.items():
+                in list(self.overriding_interfaces.items()):
 
             overridden_interface = self.overridden_interfaces.get(
                 overriding_interface_name, {})

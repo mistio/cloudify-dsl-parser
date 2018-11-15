@@ -57,7 +57,7 @@ class Holder(object):
             raise ValueError('Value is expected to be of type dict while it'
                              'is in fact of type {0}'
                              .format(type(self.value).__name__))
-        for key_holder, value_holder in self.value.iteritems():
+        for key_holder, value_holder in list(self.value.items()):
             if key_holder.value == key:
                 return key_holder, value_holder
         return None, None
@@ -65,7 +65,7 @@ class Holder(object):
     def restore(self):
         if isinstance(self.value, dict):
             return dict((key_holder.restore(), value_holder.restore())
-                        for key_holder, value_holder in self.value.iteritems())
+                        for key_holder, value_holder in list(self.value.items()))
         elif isinstance(self.value, list):
             return [value_holder.restore() for value_holder in self.value]
         elif isinstance(self.value, set):
@@ -80,7 +80,7 @@ class Holder(object):
         if isinstance(obj, dict):
             result = dict((Holder.of(key, filename=filename),
                            Holder.of(value, filename=filename))
-                          for key, value in obj.iteritems())
+                          for key, value in list(obj.items()))
         elif isinstance(obj, list):
             result = [Holder.of(item, filename=filename) for item in obj]
         elif isinstance(obj, set):

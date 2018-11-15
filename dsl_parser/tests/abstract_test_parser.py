@@ -160,8 +160,8 @@ node_types:
         return filename_path if not as_uri else self._path2url(filename_path)
 
     def _path2url(self, path):
-        from urllib import pathname2url
-        from urlparse import urljoin
+        from urllib.request import pathname2url
+        from urllib.parse import urljoin
         return urljoin('file:', pathname2url(path))
 
     def create_yaml_with_imports(self, contents, as_uri=False):
@@ -229,7 +229,7 @@ imports:"""
             parsing_method(dsl)
             self.fail()
         except exception_type as ex:
-            self.assertEquals(expected_error_code, ex.err_code)
+            self.assertEqual(expected_error_code, ex.err_code)
             return ex
 
     def get_node_by_name(self, plan, name):

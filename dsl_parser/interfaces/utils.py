@@ -36,7 +36,7 @@ def validate_missing_inputs(inputs, schema_inputs):
 
 
 def validate_inputs_types(inputs, schema_inputs):
-    for input_key, _input in schema_inputs.iteritems():
+    for input_key, _input in schema_inputs.items():
         input_type = _input.get('type')
         if input_type is None:
             # no type defined - no validation
@@ -48,11 +48,11 @@ def validate_inputs_types(inputs, schema_inputs):
             continue
 
         if input_type == 'integer':
-            if isinstance(input_val, (int, long)) and not \
+            if isinstance(input_val, int) and not \
                     isinstance(input_val, bool):
                 continue
         elif input_type == 'float':
-            if isinstance(input_val, (int, float, long)) and not \
+            if isinstance(input_val, (int, float)) and not \
                     isinstance(input_val, bool):
                 continue
         elif input_type == 'boolean':
@@ -77,8 +77,8 @@ def merge_schema_and_instance_inputs(schema_inputs,
 
     flattened_schema_inputs = utils.flatten_schema(schema_inputs)
     merged_inputs = dict(
-            flattened_schema_inputs.items() +
-            instance_inputs.items())
+            list(flattened_schema_inputs.items()) +
+            list(instance_inputs.items()))
 
     validate_missing_inputs(merged_inputs, schema_inputs)
     validate_inputs_types(merged_inputs, schema_inputs)

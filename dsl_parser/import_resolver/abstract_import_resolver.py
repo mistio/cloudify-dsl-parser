@@ -15,7 +15,7 @@
 
 import abc
 import contextlib
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 import requests
 from retrying import retry
@@ -28,15 +28,13 @@ MAX_NUMBER_RETRIES = 5
 DEFAULT_REQUEST_TIMEOUT = 10
 
 
-class AbstractImportResolver(object):
+class AbstractImportResolver(object, metaclass=abc.ABCMeta):
     """
     This class is abstract and should be inherited by concrete
     implementations of import resolver.
     The only mandatory implementation is of resolve, which is expected
     to open the import url and return its data.
     """
-
-    __metaclass__ = abc.ABCMeta
 
     @abc.abstractmethod
     def resolve(self, import_url):
@@ -53,10 +51,10 @@ def read_import(import_url):
     error_str = 'Import failed: Unable to open import url'
     if import_url.startswith('file:'):
         try:
-            request = urllib2.Request(import_url)
-            with contextlib.closing(urllib2.urlopen(request)) as f:
+            request = urllib.request.Request(import_url)
+            with contextlib.closing(urllib.request.urlopen(request)) as f:
                 return f.read()
-        except Exception, ex:
+        except Exception as ex:
             ex = exceptions.DSLParsingLogicException(
                 13, '{0} {1}; {2}'.format(error_str, import_url, ex))
             raise ex

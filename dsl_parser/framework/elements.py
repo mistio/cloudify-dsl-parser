@@ -14,7 +14,7 @@
 #    * limitations under the License.
 
 import copy
-from StringIO import StringIO
+from io import StringIO
 
 from dsl_parser import exceptions
 from dsl_parser import holder

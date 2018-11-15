@@ -14,4 +14,4 @@
 #    * limitations under the License.
 
 
-PRIMITIVE_TYPES = (list, bool, int, float, long, basestring, dict)
+PRIMITIVE_TYPES = (list, bool, int, float, int, str, dict)

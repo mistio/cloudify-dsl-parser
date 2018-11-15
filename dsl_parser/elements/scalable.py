@@ -66,7 +66,7 @@ class MinInstances(NonNegativeInstances):
 
 class MaxInstances(Instances):
 
-    schema = Leaf(type=(int, basestring, dict))
+    schema = Leaf(type=(int, str, dict))
     default_value = constants.UNBOUNDED
 
     def validate(self):
@@ -75,7 +75,7 @@ class MaxInstances(Instances):
         value = self.initial_value
         if value is None:
             return
-        if isinstance(value, basestring):
+        if isinstance(value, str):
             if value != constants.UNBOUNDED_LITERAL:
                 raise exceptions.DSLParsingLogicException(
                     exceptions.ERROR_INVALID_LITERAL_INSTANCES,

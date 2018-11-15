@@ -135,7 +135,7 @@ class DefaultImportResolver(AbstractImportResolver):
                     'Each rule must be a dictionary but the rule '
                     '[{0}] is of type {1}.'
                     .format(rule, type(rule).__name__))
-            keys = rule.keys()
+            keys = list(rule.keys())
             if not len(keys) == 1:
                 raise DefaultResolverValidationException(
                     'Invalid parameters supplied for the default resolver: '

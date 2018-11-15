@@ -180,12 +180,12 @@ class TestEvaluateFunctions(AbstractTestParser):
 
         node_instances = dict(
             (node_instance_id, NodeInstance(node_instance))
-            for node_instance_id, node_instance in node_instances.items())
+            for node_instance_id, node_instance in list(node_instances.items()))
 
         nodes = {}
 
         node_to_node_instances = collections.defaultdict(list)
-        for node_instance_id, node_instance in node_instances.items():
+        for node_instance_id, node_instance in list(node_instances.items()):
             nodes[node_instance.node_id] = Node({})
             node_instance['id'] = node_instance_id
             node_to_node_instances[node_instance.node_id].append(node_instance)
@@ -336,15 +336,15 @@ class TestEvaluateFunctions(AbstractTestParser):
 
         node_instances = dict(
             (node_instance_id, NodeInstance(node_instance))
-            for node_instance_id, node_instance in node_instances.items())
+            for node_instance_id, node_instance in list(node_instances.items()))
 
         node_to_node_instances = collections.defaultdict(list)
-        for node_instance_id, node_instance in node_instances.items():
+        for node_instance_id, node_instance in list(node_instances.items()):
             node_instance['id'] = node_instance_id
             node_to_node_instances[node_instance.node_id].append(node_instance)
 
         nodes = {}
-        for node_instance in node_instances.values():
+        for node_instance in list(node_instances.values()):
             nodes[node_instance.node_id] = Node({
                 'relationships': [
                     {'target_id': r['target_name'],

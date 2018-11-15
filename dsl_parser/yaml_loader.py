@@ -96,51 +96,51 @@ class HolderConstructor(SafeConstructor):
 
 
 HolderConstructor.add_constructor(
-    u'tag:yaml.org,2002:null',
+    'tag:yaml.org,2002:null',
     HolderConstructor.construct_yaml_null)
 
 HolderConstructor.add_constructor(
-    u'tag:yaml.org,2002:bool',
+    'tag:yaml.org,2002:bool',
     HolderConstructor.construct_yaml_bool)
 
 HolderConstructor.add_constructor(
-    u'tag:yaml.org,2002:int',
+    'tag:yaml.org,2002:int',
     HolderConstructor.construct_yaml_int)
 
 HolderConstructor.add_constructor(
-    u'tag:yaml.org,2002:float',
+    'tag:yaml.org,2002:float',
     HolderConstructor.construct_yaml_float)
 
 HolderConstructor.add_constructor(
-    u'tag:yaml.org,2002:binary',
+    'tag:yaml.org,2002:binary',
     HolderConstructor.construct_yaml_binary)
 
 HolderConstructor.add_constructor(
-    u'tag:yaml.org,2002:timestamp',
+    'tag:yaml.org,2002:timestamp',
     HolderConstructor.construct_yaml_timestamp)
 
 HolderConstructor.add_constructor(
-    u'tag:yaml.org,2002:omap',
+    'tag:yaml.org,2002:omap',
     HolderConstructor.construct_yaml_omap)
 
 HolderConstructor.add_constructor(
-    u'tag:yaml.org,2002:pairs',
+    'tag:yaml.org,2002:pairs',
     HolderConstructor.construct_yaml_pairs)
 
 HolderConstructor.add_constructor(
-    u'tag:yaml.org,2002:set',
+    'tag:yaml.org,2002:set',
     HolderConstructor.construct_yaml_set)
 
 HolderConstructor.add_constructor(
-    u'tag:yaml.org,2002:str',
+    'tag:yaml.org,2002:str',
     HolderConstructor.construct_yaml_str)
 
 HolderConstructor.add_constructor(
-    u'tag:yaml.org,2002:seq',
+    'tag:yaml.org,2002:seq',
     HolderConstructor.construct_yaml_seq)
 
 HolderConstructor.add_constructor(
-    u'tag:yaml.org,2002:map',
+    'tag:yaml.org,2002:map',
     HolderConstructor.construct_yaml_map)
 
 

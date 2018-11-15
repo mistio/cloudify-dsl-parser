@@ -176,7 +176,7 @@ node_templates:
                            "'source_op_secret_id'\] don't exist in this tenant"
 
         get_secret_not_found = MagicMock(side_effect=TestNotFoundException)
-        self.assertRaisesRegexp(exceptions.UnknownSecretError,
+        self.assertRaisesRegex(exceptions.UnknownSecretError,
                                 expected_message,
                                 prepare_deployment_plan,
                                 self.parse_1_3(self.secrets_yaml),
@@ -184,7 +184,7 @@ node_templates:
 
     def test_validate_secrets_unexpected_exception(self):
         get_secret_exception = MagicMock(side_effect=TypeError)
-        self.assertRaisesRegexp(TypeError,
+        self.assertRaisesRegex(TypeError,
                                 '',
                                 prepare_deployment_plan,
                                 self.parse_1_3(self.secrets_yaml),
@@ -198,7 +198,7 @@ node_templates:
         get_secret_not_found.side_effect = [None, None, TestNotFoundException,
                                             None, None, None,
                                             TestNotFoundException]
-        self.assertRaisesRegexp(exceptions.UnknownSecretError,
+        self.assertRaisesRegex(exceptions.UnknownSecretError,
                                 expected_message,
                                 prepare_deployment_plan,
                                 self.parse_1_3(self.secrets_yaml),

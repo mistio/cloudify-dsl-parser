@@ -104,9 +104,8 @@ class RuntimeEvaluationStorage(object):
         return self._secrets[secret_key]
 
 
-class Function(object):
+class Function(object, metaclass=abc.ABCMeta):
 
-    __metaclass__ = abc.ABCMeta
     name = 'function'
 
     def __init__(self, args, scope=None, context=None, path=None, raw=None):
@@ -141,7 +140,7 @@ class GetInput(Function):
         super(GetInput, self).__init__(args, **kwargs)
 
     def parse_args(self, args):
-        valid_args_type = isinstance(args, basestring)
+        valid_args_type = isinstance(args, str)
         if not valid_args_type:
             raise ValueError(
                 "get_input function argument should be a string, "
@@ -455,7 +454,7 @@ class GetSecret(Function):
         super(GetSecret, self).__init__(args, **kwargs)
 
     def parse_args(self, args):
-        if not isinstance(args, basestring):
+        if not isinstance(args, str):
             raise ValueError(
                 "`get_secret` function argument should be a string. Instead "
                 "it is a {0} with the value: {1}.".format(type(args), args))
@@ -581,7 +580,7 @@ def _get_property_value(node_name,
 
 def parse(raw_function, scope=None, context=None, path=None):
     if _is_function(raw_function):
-        func_name, func_args = raw_function.items()[0]
+        func_name, func_args = list(raw_function.items())[0]
         return TEMPLATE_FUNCTIONS[func_name](func_args,
                                              scope=scope,
                                              context=context,
@@ -632,7 +631,7 @@ def evaluate_outputs(outputs_def,
     :param get_secret_method: A method for getting a secret.
     :return: Outputs dict.
     """
-    outputs = dict((k, v['value']) for k, v in outputs_def.iteritems())
+    outputs = dict((k, v['value']) for k, v in list(outputs_def.items()))
     return evaluate_functions(
         payload=outputs,
         context={},

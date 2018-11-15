@@ -90,7 +90,7 @@ class OperationMaxRetries(Element):
 
 class OperationRetryInterval(Element):
 
-    schema = Leaf(type=(int, float, long))
+    schema = Leaf(type=(int, float, int))
     requires = {
         _version.ToscaDefinitionsVersion: ['version'],
         'inputs': ['validate_version']
@@ -110,7 +110,7 @@ class OperationRetryInterval(Element):
 class Operation(Element):
 
     def parse(self):
-        if isinstance(self.initial_value, basestring):
+        if isinstance(self.initial_value, str):
             return {
                 'implementation': self.initial_value,
                 'executor': None,
@@ -186,7 +186,7 @@ def process_interface_operations(
                               error_code=error_code,
                               partial_error_message=partial_error_message,
                               resource_bases=resource_bases)
-            for operation_name, operation_content in interface.items()]
+            for operation_name, operation_content in list(interface.items())]
 
 
 def process_operation(
@@ -214,7 +214,7 @@ def process_operation(
         else:
             return no_op_operation(operation_name=operation_name)
 
-    candidate_plugins = [p for p in plugins.keys()
+    candidate_plugins = [p for p in list(plugins.keys())
                          if operation_mapping.startswith('{0}.'.format(p))]
     if candidate_plugins:
         if len(candidate_plugins) > 1:

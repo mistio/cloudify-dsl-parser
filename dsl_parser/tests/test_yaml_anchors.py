@@ -57,8 +57,8 @@ node_templates:
             'node3': {'prop1': 1, 'prop2': 3}
         }
 
-        for node, expected_value in expected_node_properties.iteritems():
-            self.assertEquals(expected_value,
+        for node, expected_value in expected_node_properties.items():
+            self.assertEqual(expected_value,
                               self._get_node_properties(parsed_plan, node))
 
     def test_anchors_override(self):
@@ -96,6 +96,6 @@ node_templates:
             'node3': {'prop1': 1, 'prop2': 3}
         }
 
-        for node_id, expected_value in expected_node_properties.iteritems():
-            self.assertEquals(expected_value,
+        for node_id, expected_value in expected_node_properties.items():
+            self.assertEqual(expected_value,
                               self._get_node_properties(parsed_plan, node_id))

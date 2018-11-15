@@ -175,7 +175,7 @@ node_templates:
             name: { get_input: name_i }
 """
 
-        u = u'M\xf6tley'
+        u = 'M\xf6tley'
 
         e = self.assertRaises(
             DSLParsingInputTypeException,

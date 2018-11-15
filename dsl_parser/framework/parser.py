@@ -35,8 +35,8 @@ class SchemaAPIValidator(object):
 
     def _traverse_schema(self, schema, list_nesting=0):
         if isinstance(schema, dict):
-            for key, value in schema.items():
-                if not isinstance(key, basestring):
+            for key, value in list(schema.items()):
+                if not isinstance(key, str):
                     raise exceptions.DSLParsingSchemaAPIException(1)
                 self._traverse_element_cls(value)
         elif isinstance(schema, list):
@@ -154,7 +154,7 @@ class Context(object):
             return
 
         parsed_names = set()
-        for name, element_cls in schema.items():
+        for name, element_cls in list(schema.items()):
             if name not in parent_element.initial_value_holder:
                 value = None
             else:
@@ -166,7 +166,7 @@ class Context(object):
                                        value=value,
                                        parent_element=parent_element)
         for k_holder, v_holder in parent_element.initial_value_holder.value.\
-                iteritems():
+                items():
             if k_holder.value not in parsed_names:
                 self._traverse_element_cls(element_cls=elements.UnknownElement,
                                            name=k_holder, value=v_holder,
@@ -180,8 +180,8 @@ class Context(object):
         if isinstance(schema, elements.Dict):
             if not isinstance(parent_element.initial_value, dict):
                 return
-            for name_holder, value_holder in parent_element.\
-                    initial_value_holder.value.items():
+            for name_holder, value_holder in list(parent_element.\
+                    initial_value_holder.value.items()):
                 self._traverse_element_cls(element_cls=element_cls,
                                            name=name_holder,
                                            value=value_holder,
@@ -206,11 +206,11 @@ class Context(object):
 
     def _calculate_element_graph(self):
         self.element_graph = nx.DiGraph(self._element_tree)
-        for element_type, _elements in self.element_type_to_elements.items():
+        for element_type, _elements in list(self.element_type_to_elements.items()):
             requires = element_type.requires
-            for requirement, requirement_values in requires.items():
+            for requirement, requirement_values in list(requires.items()):
                 requirement_values = [
-                    Requirement(r) if isinstance(r, basestring)
+                    Requirement(r) if isinstance(r, str)
                     else r for r in requirement_values]
                 if requirement == 'inputs':
                     continue
@@ -310,20 +310,20 @@ class Parser(object):
                 if not isinstance(value, dict):
                     raise exceptions.DSLParsingFormatException(
                         1, _expected_type_message(value, dict))
-                for key in value.keys():
-                    if not isinstance(key, basestring):
+                for key in list(value.keys()):
+                    if not isinstance(key, str):
                         raise exceptions.DSLParsingFormatException(
                             1, "Dict keys must be strings but"
                                " found '{0}' of type '{1}'"
                                .format(key, _py_type_to_user_type(type(key))))
 
             if strict and isinstance(schema, dict):
-                for key in value.keys():
+                for key in list(value.keys()):
                     if key not in schema:
                         ex = exceptions.DSLParsingFormatException(
                             1, "'{0}' is not in schema. "
                                "Valid schema values: {1}"
-                               .format(key, schema.keys()))
+                               .format(key, list(schema.keys())))
                         for child_element in element.children():
                             if child_element.name == key:
                                 ex.element = child_element
@@ -370,8 +370,8 @@ class Parser(object):
     def _extract_element_requirements(element):
         context = element.context
         required_args = {}
-        for required_type, requirements in element.requires.items():
-            requirements = [Requirement(r) if isinstance(r, basestring)
+        for required_type, requirements in list(element.requires.items()):
+            requirements = [Requirement(r) if isinstance(r, str)
                             else r for r in requirements]
             if not requirements:
                 # only set required type as a logical dependency
@@ -382,7 +382,7 @@ class Parser(object):
                         raise exceptions.DSLParsingFormatException(
                             1, "Missing required input '{0}'. "
                                "Existing inputs: "
-                               .format(input.name, context.inputs.keys()))
+                               .format(input.name, list(context.inputs.keys())))
                     required_args[input.name] = context.inputs.get(input.name)
             else:
                 if required_type == 'self':
@@ -400,7 +400,7 @@ class Parser(object):
                         else:
                             if (requirement.name not in
                                     required_element.provided):
-                                provided = required_element.provided.keys()
+                                provided = list(required_element.provided.keys())
                                 if requirement.required:
                                     raise exceptions.DSLParsingFormatException(
                                         1,
@@ -463,11 +463,11 @@ def _expected_type_message(value, expected_type):
 def _py_type_to_user_type(_type):
     if isinstance(_type, tuple):
         return list(set(_py_type_to_user_type(t) for t in _type))
-    elif issubclass(_type, basestring):
+    elif issubclass(_type, str):
         return 'string'
     elif issubclass(_type, bool):
         return 'boolean'
-    elif issubclass(_type, int) or issubclass(_type, long):
+    elif issubclass(_type, int) or issubclass(_type, int):
         return 'integer'
     elif issubclass(_type, float):
         return 'float'
